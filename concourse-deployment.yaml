@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.26.1 (a9d05d509)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: concourse
+  name: concourse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: concourse
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: concourse
+    spec:
+      containers:
+        - args:
+            - quickstart
+          env:
+            - name: CONCOURSE_ADD_LOCAL_USER
+              value: test:test
+            - name: CONCOURSE_CLIENT_SECRET
+              value: Y29uY291cnNlLXdlYgo=
+            - name: CONCOURSE_CLUSTER_NAME
+              value: arm64
+            - name: CONCOURSE_CONTENT_SECURITY_POLICY
+              value: '*'
+            - name: CONCOURSE_EXTERNAL_URL
+              value: http://10.0.19.18:8080
+            - name: CONCOURSE_MAIN_TEAM_LOCAL_USER
+              value: test
+            - name: CONCOURSE_POSTGRES_DATABASE
+              value: concourse
+            - name: CONCOURSE_POSTGRES_HOST
+              value: concourse-db
+            - name: CONCOURSE_POSTGRES_PASSWORD
+              value: concourse_pass
+            - name: CONCOURSE_POSTGRES_USER
+              value: concourse_user
+            - name: CONCOURSE_TSA_CLIENT_SECRET
+              value: Y29uY291cnNlLXdvcmtlcgo=
+            - name: CONCOURSE_WORKER_BAGGAGECLAIM_DRIVER
+              value: overlay
+            - name: CONCOURSE_WORKER_CONTAINERD_DNS_SERVER
+              value: 8.8.8.8
+            - name: CONCOURSE_WORKER_RUNTIME
+              value: containerd
+            - name: CONCOURSE_X_FRAME_OPTIONS
+              value: allow
+          image: rdclda/concourse:7.5.0
+          name: concourse
+          ports:
+            - containerPort: 8080
+          resources: {}
+          securityContext:
+            privileged: true
+      restartPolicy: Always
+status: {}
